@@ -1,0 +1,39 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/Player/PlayerCombat.cs" id="1_player"]
+[ext_resource type="Script" path="res://scripts/Boss/BossMoveTracker.cs" id="2_tracker"]
+[ext_resource type="Script" path="res://scripts/Boss/BossAI.cs" id="3_boss"]
+[ext_resource type="Script" path="res://scripts/Debug/FightLog.cs" id="4_log"]
+[ext_resource type="Script" path="res://scripts/Debug/MemorisedTimingBot.cs" id="5_bot"]
+[ext_resource type="Resource" path="res://attacks/overhead.tres" id="6_overhead"]
+[ext_resource type="Resource" path="res://attacks/sweep.tres" id="7_sweep"]
+[ext_resource type="Resource" path="res://attacks/thrust.tres" id="8_thrust"]
+
+[node name="Main" type="Node"]
+
+[node name="Player" type="Node" parent="."]
+script = ExtResource("1_player")
+
+[node name="Tracker" type="Node" parent="."]
+script = ExtResource("2_tracker")
+
+[node name="Boss" type="Node" parent="." node_paths=PackedStringArray("Tracker", "Player")]
+script = ExtResource("3_boss")
+Moveset = [ExtResource("6_overhead"), ExtResource("7_sweep"), ExtResource("8_thrust")]
+Tracker = NodePath("../Tracker")
+Player = NodePath("../Player")
+
+[node name="FightLog" type="Label" parent="." node_paths=PackedStringArray("Boss", "Tracker", "Player")]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 600.0
+offset_bottom = 200.0
+script = ExtResource("4_log")
+Boss = NodePath("../Boss")
+Tracker = NodePath("../Tracker")
+Player = NodePath("../Player")
+
+[node name="Bot" type="Node" parent="." node_paths=PackedStringArray("Boss", "Player")]
+script = ExtResource("5_bot")
+Boss = NodePath("../Boss")
+Player = NodePath("../Player")

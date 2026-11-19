@@ -27,6 +27,7 @@ public partial class BossAI : Node
     [Export] public float MaxBossParryChance { get; set; } = 0.5f;
 
     [Signal] public delegate void AttackStartedEventHandler(StringName attackId, int variant);
+    [Signal] public delegate void ParriedEventHandler(StringName attackId, int frameInWindow);
     [Signal] public delegate void PhaseChangedEventHandler(int phase);
     [Signal] public delegate void DiedEventHandler();
 
@@ -73,6 +74,9 @@ public partial class BossAI : Node
                 break;
         }
     }
+
+    /// <summary>Fixes the attack and variant rolls, for reproducible test fights.</summary>
+    public void Reseed(ulong seed) => _rng.Seed = seed;
 
     /// <summary>
     /// Called by the player's attack. Returns false if the boss parried it,
@@ -136,6 +140,7 @@ public partial class BossAI : Node
         switch (Player.ResolveIncomingHit(out int frameInWindow))
         {
             case ParryResult.Perfect:
+                EmitSignal(SignalName.Parried, _attack.Id, frameInWindow);
                 Tracker.OnPerfectParry(_attack.Id, frameInWindow);
                 Enter(State.Staggered, StaggerFrames);
                 return;

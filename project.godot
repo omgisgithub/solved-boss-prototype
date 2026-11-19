@@ -7,6 +7,7 @@ config_version=5
 [application]
 
 config/name="Solved"
+run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 
 [dotnet]

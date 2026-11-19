@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/Combat/AttackData.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+Id = &"thrust"
+StartupFrames = 18
+RecoveryFrames = 26
+Damage = 15
+DelayedExtraStartup = 12
+FeintCancelFrame = 12

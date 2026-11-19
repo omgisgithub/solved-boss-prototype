@@ -1,0 +1,37 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GODOT_VERSION: 4.4.1
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build C#
+        run: dotnet build Solved.csproj --nologo
+
+      - name: Download Godot
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "GODOT=$(find "$RUNNER_TEMP/godot" -type f -name 'Godot_v*' | head -n 1)" >> "$GITHUB_ENV"
+
+      - name: Import project
+        run: '"$GODOT" --headless --path . --import'
+
+      - name: Play the fight with the memorised-timing bot
+        run: |
+          "$GODOT" --headless --path . --fixed-fps 60 -- --autoplay 2>&1 | tee fight.log
+          if grep -E "ERROR|FAILED" fight.log; then exit 1; fi
+          grep -q "autoplay: reached phase 2" fight.log
