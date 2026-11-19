@@ -58,6 +58,12 @@ From one CI run (the number is the physics tick):
 
 The bot solves two of the three attacks, which triggers phase 2 with the boss at full health. After that the delayed overhead lands 7 frames later than the clean one and gets through a parry thrown on the old timing.
 
+## Seed sweep and the Bot's job
+
+`tools/sweep.sh` plays the same fight once per seed and prints a table: how often the bot reaches phase 2, how many ticks it takes, and how many hits each variant lands. CI runs 40 seeds on every push and puts the table in the job summary. It fails if phase 2 is reached in under 90% of runs or if a clean attack ever gets through a correctly timed parry.
+
+This is the loop a Devin Bot is meant to own on this project: run the sweep on every pull request, catch balance regressions, and propose frame tuning with the numbers attached. The rules it works to are in [AGENTS.md](AGENTS.md).
+
 ## Running
 
 Needs Godot 4.4.1 (.NET build) and the .NET 8 SDK. Open the folder in Godot, build, and run. Parry is Space, and the fight state is shown on screen.

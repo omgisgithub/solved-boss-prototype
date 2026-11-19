@@ -35,3 +35,6 @@ jobs:
           "$GODOT" --headless --path . --fixed-fps 60 -- --autoplay 2>&1 | tee fight.log
           if grep -E "ERROR|FAILED" fight.log; then exit 1; fi
           grep -q "autoplay: reached phase 2" fight.log
+
+      - name: Sweep 40 seeds
+        run: tools/sweep.sh 40 | tee -a "$GITHUB_STEP_SUMMARY"
